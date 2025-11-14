@@ -62,7 +62,7 @@ help:
 	@echo "  all                    - Build"
 	@echo "  task1                  - Build task1"
 	@echo "  task2                  - Build task2"
-	@echo "  clean                  - Remove object files and graph"
+	@echo "  clean                  - Remove files"
 	@echo "  rebuild                - Rebuild from scratch"
 	@echo "  clean_objects          - Remove object files"
 	@echo "  cppcheck               - Cppcheck files"
