@@ -1,3 +1,5 @@
+#include "udp_client.h"
+
 #include <arpa/inet.h>
 #include <stdio.h>
 #include <string.h>
@@ -24,14 +26,13 @@ void *udp_sender() {
     if (!error) error = read_cpu(Cpu2, &cpu_count);
     if (!error) {
       char buffer[MAX_LEN] = "";
-      sprintf(buffer, "Detected %d CPU cores\n", cpu_count);
       for (int i = 0; i != cpu_count + 1; ++i) {
         char line[64];
-        sprintf(line, "%s: %.2lf%%\n", (Cpu1[i]).cpu_name,
+        sprintf(line, i == cpu_count ? "%.2lf" : "%.2lf,",
                 calc_usage(Cpu1[i], Cpu2[i]));
         strcat(buffer, line);
       }
-      strcat(buffer, "-------------------\n");
+      strcat(buffer, "\n");
       sendto(sockfd, buffer, strlen(buffer), 0, (struct sockaddr *)&server_addr,
              sizeof(server_addr));
     }

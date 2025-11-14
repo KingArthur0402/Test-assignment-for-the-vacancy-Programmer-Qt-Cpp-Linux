@@ -1,7 +1,7 @@
 #include <pthread.h>
 
 #include "../task1/cpu_info.h"
-#include "upd_client.h"
+#include "udp_client.h"
 
 int main() {
   pthread_t tid;
