@@ -16,9 +16,7 @@ CpuGraph::CpuGraph(QWidget *parent) : QWidget(parent) {
   customPlot->axisRect()->insetLayout()->setInsetAlignment(
       0, Qt::AlignTop | Qt::AlignRight);
   udpSocket = new QUdpSocket(this);
-  bool ok = udpSocket->bind(QHostAddress::LocalHost, 1234,
-                            QUdpSocket::ReuseAddressHint);
-  qDebug() << "Bind success:" << ok;
+  udpSocket->bind(QHostAddress::LocalHost, 1234, QUdpSocket::ReuseAddressHint);
   connect(udpSocket, &QUdpSocket::readyRead, this,
           &CpuGraph::readPendingDatagrams);
 }
@@ -36,8 +34,6 @@ void CpuGraph::readPendingDatagrams() {
         customPlot->addGraph();
         customPlot->graph(i)->setPen(
             QPen(QColor::fromHsv(i * 40 % 360, 255, 200)));
-        QString cpuName = (i == 0) ? "CPU" : QString("CPU%1").arg(i - 1);
-        customPlot->graph(i)->setName(cpuName);
       }
     }
     timeData.append(elapsedTime);
@@ -45,6 +41,10 @@ void CpuGraph::readPendingDatagrams() {
       double val = values[i].toDouble();
       cpuData[i].append(val);
       customPlot->graph(i)->setData(timeData, cpuData[i]);
+      QString cpuName =
+          ((i == 0) ? QString("CPU: %1%").arg(val, 0, 'f', 1)
+                    : QString("CPU%1: %2%").arg(i - 1).arg(val, 0, 'f', 1));
+      customPlot->graph(i)->setName(cpuName);
     }
     elapsedTime += 1.0;
     if (timeData.size() > maxPoints) {
